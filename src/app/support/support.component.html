@@ -1,0 +1,75 @@
+<app-header></app-header>
+<div class="support">
+  <div class="header-section">
+    <div class="title-section">
+      <div class="title">How Can We Help?</div>
+      <div class="description">Ofofo is a Cybersecurity marketplace designed for small and medium businesses to build
+        Cyber resilience.</div>
+      <input type="input" class="supportsearch" (keyup)="onKeyUp($event.target)" (keyup.enter)="onKeyEnter()" />
+      <div class="search-text">
+        <img src="assets/images/inputsearchicon.svg" class="me-2" (click)="onKeyEnter()" />
+        Search for articles,FAQs...
+      </div>
+    </div>
+    <div class="social-section">
+      <img src="assets/images/headeryoutube.svg" class="youtube" />
+      <img src="assets/images/headerlinkedin.svg" class="linkedin" />
+      <img src="assets/images/headertwitter.svg" class="twitter" />
+      <img src="assets/images/headerinsta.svg" class="instagram" />
+    </div>
+  </div>
+  <div class="category-section">
+    <div class="section-heading">
+      <img src="assets/images/categoryicon.svg" class="me-2" (click)="onKeyEnter()" />
+      All Categories
+    </div>
+    <div class="section-body">
+      <div class="offering-segment card">
+        <img [src]="categories[0].image" [alt]="categories[0].name" />
+        <span class="count">{{ categories[0].count }} Articles</span>
+        <span class="name"> {{ categories[0].name }}</span>
+      </div>
+      <div class="category-segments">
+        <div class="user-segments">
+          <div class="buyer-segments card">
+            <img [src]="categories[4].image" [alt]="categories[4].name" />
+            <span class="count">{{ categories[4].count }} Articles</span>
+            <span class="name"> {{ categories[4].name }}</span>
+          </div>
+          <div class="seller-segments card">
+            <img [src]="categories[3].image" [alt]="categories[3].name" />
+            <span class="count">{{ categories[3].count }} Articles</span>
+            <span class="name"> {{ categories[3].name }}</span>
+          </div>
+          <div class="Cybersecurity-segment card">
+            <img [src]="categories[5].image" [alt]="categories[5].name" />
+            <span class="count">{{ categories[5].count }} Articles</span>
+            <span class="name"> {{ categories[5].name }}</span>
+          </div>
+          <div class="aws-segments card">
+            <img [src]="categories[2].image" [alt]="categories[2].name" />
+            <span class="count">{{ categories[2].count }} Articles</span>
+            <span class="name"> {{ categories[2].name }}</span>
+          </div>
+          <div class="azure-segments card">
+            <img [src]="categories[1].image" [alt]="categories[1].name" />
+            <span class="count">{{ categories[1].count }} Articles</span>
+            <span class="name"> {{ categories[1].name }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section-bodysubsection">
+      Also Check Out
+      <div class="other-web">
+        <img src="assets/images/categoryicon.svg" class="me-2" (click)="onKeyEnter()" />
+        Ofofo Marketplace
+      </div>
+    </div>
+    <div class="section-heading2">
+      <img src="assets/images/categoryicon.svg" class="me-2" (click)="onKeyEnter()" />
+      All Categories
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

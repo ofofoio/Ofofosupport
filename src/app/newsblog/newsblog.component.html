@@ -1,0 +1,95 @@
+<app-header></app-header>
+<div class="news">
+  <div class="heading">
+    <img (click)="redirect('home')" src="assets/images/home.svg" alt="share" />
+    <span>/</span>
+    <span class="newspagelink" (click)="redirect('news')">News</span>
+    <span>/</span>
+    <span class="current-news">{{ news.Title }}</span>
+  </div>
+  <div class="news-section">
+    <div class="news-content">
+      <div class="news-tittle">{{ news.Title }}</div>
+      <div class="news-details">
+      <div class="author-section" (click)="newsblog()">
+        <span class="author-icon">{{ news.Author[0] }}</span>
+        <span>By</span>
+        <span class="author-name">{{ news.Author }}</span>
+      </div>
+      <div class="date-section">
+        <span class="date">{{ news.pubDate }}</span>
+        <div data-bs-toggle="modal" data-bs-target="#shareModal">
+          <img src="assets/images/shareblue.svg" alt="share" />
+          <span>Share</span>
+        </div>
+      </div>
+      </div>
+    </div>
+    <img src="{{ news.Image }}" alt="share" />
+  </div>
+  <div class="news-description">{{ news.Description }}</div>
+</div>
+<app-footer></app-footer>
+
+<div
+  class="modal fade"
+  id="shareModal"
+  tabindex="-1"
+  aria-labelledby="shareModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content share-content">
+      <div class="modal-body sharemodal-body">
+        <div class="header">
+          <span>Share</span>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="social-media-section">
+          <div (click)="share('linkedin')">
+            <img src="assets/images/linkedinshare.svg" alt="linkedin" /><span
+              >LinkedIn</span
+            >
+          </div>
+          <div (click)="share('whatsup')">
+            <img src="assets/images/wathsupshare.svg" alt="whatsup" /><span
+              >WhatsApp</span
+            >
+          </div>
+          <div (click)="share('twitter')">
+            <img src="assets/images/twittershare.svg" alt="twitter" /><span
+              >X</span
+            >
+          </div>
+          <div (click)="share('facebook')">
+            <img src="assets/images/facebookshare.svg" alt="twitter" /><span
+              >Facebook</span
+            >
+          </div>
+          <div (click)="share('insta')">
+            <img src="assets/images/instashare.svg" alt="instagram" /><span
+              >Instagram</span
+            >
+          </div>
+          <div (click)="share('telegram')">
+            <img src="assets/images/telegramshare.svg" alt="instagram" /><span
+              >Telegram</span
+            >
+          </div>
+        </div>
+        <div class="sub-header">
+          Copy Link
+          <div class="link-section" (click)="share('copy')">
+            <span>{{ urlShare }}</span>
+            <img src="assets/images/shareicon.svg" alt="share" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
