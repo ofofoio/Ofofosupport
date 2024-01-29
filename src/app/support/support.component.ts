@@ -15,7 +15,7 @@ export class SupportComponent {
   public categories: any = [
     {
       id: 1,
-      name: "Introduction to Offerings",
+      name: "Introductions to the offerings",
       count: 0,
       image: "assets/images/offeringintro.svg"
     },
@@ -33,13 +33,13 @@ export class SupportComponent {
     },
     {
       id: 4,
-      name: "Seller Guide",
+      name: "Ofofo Seller Guide",
       count: 0,
       image: "assets/images/sellercategory.svg"
     },
     {
       id: 5,
-      name: "Buyer Guide",
+      name: "Ofofo Buyer Guide",
       count: 0,
       image: "assets/images/buyercategory.svg"
     },
@@ -50,6 +50,13 @@ export class SupportComponent {
       image: "assets/images/cybersecurity.svg"
     },
   ];
+  public articals: any = {};
+  public articalcontent: any = {};
+  dataFetch: boolean = false;
+  ArticalFetch: boolean = false;
+  contentFetch: boolean = false;
+
+  placeholder: any = "assets/images/articalsdefault.svg"
 
   constructor(
     private generalService: GeneralService, 
@@ -57,6 +64,8 @@ export class SupportComponent {
 
   ngOnInit(): void {
     this.getSupport();
+    // this.getArticals();
+    this.getContents();
   }
 
   onKeyUp(value: any){
@@ -71,7 +80,43 @@ export class SupportComponent {
     this.subscriptions.push(
       this.generalService.getTopics().subscribe({
         next: async (res: any) => {
-          console.log(res);
+          res.topics.forEach((element: any) => {
+            this.categories.forEach((category: any) => {
+              if(category.name === element.title){
+                category.description = element.description
+                category.id = element.topicPageId
+                category.count = element.articles
+              }
+            });
+          });;
+          this.dataFetch = true;
+        },
+        error: (error: any) => {},
+      })
+    );
+  }
+
+  getArticals() {
+    this.subscriptions.push(
+      this.generalService.getArticles("e93eea5d-d6ca-4873-98f0-553410eaa13d").subscribe({
+        next: async (res: any) => {
+          this.articals = res.topic;
+          this.dataFetch = true;
+          this.ArticalFetch = true;
+        },
+        error: (error: any) => {},
+      })
+    );
+  }
+
+  getContents() {
+    this.subscriptions.push(
+      this.generalService.getcontents("b056b80a-d5ec-4150-ad97-c2a44a908d0d").subscribe({
+        next: async (res: any) => {
+          this.articalcontent = res.result;
+          this.dataFetch = true;
+          this.ArticalFetch = false;
+          this.contentFetch = true;
         },
         error: (error: any) => {},
       })

@@ -28,6 +28,22 @@ export class GeneralService {
     );
   }
 
+  getArticles(id: any) {
+    return this.http.get(
+      this.constantService.getUrl(
+        `/api/v1/aether-free-api/notion/supportPage/articles/${id}`
+      )
+    );
+  }
+
+  getcontents(id: any) {
+    return this.http.get(
+      this.constantService.getUrl(
+        `/api/v1/aether-free-api/notion/supportPage/article/content/${id}`
+      )
+    );
+  }
+
   getNews(body: any) {
     return this.http.post('https://hfvyjgjkussryrfqmpxaokmeia0thgkh.lambda-url.us-east-1.on.aws',body);
   }
