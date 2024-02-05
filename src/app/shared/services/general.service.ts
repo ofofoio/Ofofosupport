@@ -20,6 +20,14 @@ export class GeneralService {
     );
   }
 
+  getOfferings(searchTerm: string) {
+    return this.http.get(
+      this.constantService.getBuyerUrl(
+        `/api/v1/aether-free-api/offerings?searchTerm=${searchTerm}&size=3&page=1`
+      )
+    );
+  }
+
   getTopics() {
     return this.http.get(
       this.constantService.getUrl(

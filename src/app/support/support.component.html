@@ -1,30 +1,48 @@
 <app-header></app-header>
+<div class="loader" id="overlay" *ngIf="!dataFetch"></div>
 <div class="support" *ngIf="dataFetch">
   <div class="header-section">
     <div class="title-section">
       <div class="title">How Can We Help?</div>
       <div class="description">Ofofo is a Cybersecurity marketplace designed for small and medium businesses to build
         Cyber resilience.</div>
-      <input type="input" class="supportsearch" (keyup)="onKeyUp($event.target)" (keyup.enter)="onKeyEnter()" />
-      <div class="search-text">
-        <img src="assets/images/inputsearchicon.svg" class="me-2" (click)="onKeyEnter()" />
+      <input type="text" class="supportsearch" autocomplete="off" (keyup)="onKeyUp($event.target)"
+        (keyup.enter)="onKeyEnter()" />
+      <div class="search-text" *ngIf="searchQuery === ''">
+        <img src="assets/images/inputsearchicon.svg" class="me-2" />
         Search for articles,FAQs...
+      </div>
+      <div class="suggestions-section" *ngIf="searchQuery !== ''">
+        <ng-container *ngFor="let topics of categoriesData">
+          <div class="topics-section" *ngIf="topics.searchedarticals.length > 0">
+            <div class="topic-name">{{ topics.name }}</div>
+            <div class="horizontal-divider"></div>
+            <div class="artical-section" *ngFor="let articals of topics.searchedarticals.slice(0, 2)">
+              <div class="artical-name">{{ articals.title }}</div>
+              <div class="artical-description">{{ articals.description }}</div>
+            </div>
+          </div>
+        </ng-container>
       </div>
     </div>
     <div class="social-section">
-      <img src="assets/images/headeryoutube.svg" class="youtube" />
-      <img src="assets/images/headerlinkedin.svg" class="linkedin" />
-      <img src="assets/images/headertwitter.svg" class="twitter" />
-      <img src="assets/images/headerinsta.svg" class="instagram" />
+      <a target="_blank" href="https://www.youtube.com/@ofofostudio"><img src="assets/images/headeryoutube.svg"
+          class="youtube" /></a>
+      <a target="_blank" href="https://www.linkedin.com/company/ofofo"><img src="assets/images/headerlinkedin.svg"
+          class="linkedin" /></a>
+      <a target="_blank" href="https://twitter.com/tryofofo"><img src="assets/images/headertwitter.svg"
+          class="twitter" /></a>
+      <a target="_blank" href="https://www.instagram.com/ofofo.inc"><img src="assets/images/headerinsta.svg"
+          class="instagram" /></a>
     </div>
   </div>
   <div class="category-section">
-    <div class="section-heading" *ngIf="!ArticalFetch && !contentFetch">
+    <div class="section-heading" (click)="navigationMenu('refresh')" *ngIf="!ArticalFetch && !contentFetch">
       <img src="assets/images/categoryicon.svg" class="me-2" (click)="onKeyEnter()" />
       All Categories
     </div>
     <div class="section-body" *ngIf="!ArticalFetch && !contentFetch">
-      <div class="offering-segment card">
+      <div class="offering-segment card" (click)="selectedtopic(0)">
         <img [src]="categories[0].image" [alt]="categories[0].name" />
         <div class="image-content">
           <span class="count">{{ categories[0].count }} Articles</span>
@@ -34,68 +52,203 @@
       </div>
       <div class="category-segments">
         <div class="user-segments">
-          <div class="buyer-segments card">
+          <div class="buyer-segments card" (click)="selectedtopic(4)">
             <img [src]="categories[4].image" [alt]="categories[4].name" />
             <div class="image-content">
               <span class="count">{{ categories[4].count }} Articles</span>
               <span class="name"> {{ categories[4].name }}</span>
+              <span class="description"> {{ categories[4].description }}</span>
             </div>
           </div>
-          <div class="seller-segments card">
+          <div class="seller-segments card" (click)="selectedtopic(3)">
             <img [src]="categories[3].image" [alt]="categories[3].name" />
             <div class="image-content">
               <span class="count">{{ categories[3].count }} Articles</span>
               <span class="name"> {{ categories[3].name }}</span>
+              <span class="description"> {{ categories[3].description }}</span>
             </div>
           </div>
-          <div class="Cybersecurity-segment card">
+          <div class="Cybersecurity-segment card" (click)="selectedtopic(5)">
             <img [src]="categories[5].image" [alt]="categories[5].name" />
             <div class="image-content">
               <span class="count">{{ categories[5].count }} Articles</span>
               <span class="name"> {{ categories[5].name }}</span>
+              <span class="description"> {{ categories[5].description }}</span>
             </div>
           </div>
-          <div class="aws-segments card">
+          <div class="aws-segments card" (click)="selectedtopic(2)">
             <img [src]="categories[2].image" [alt]="categories[2].name" />
             <div class="image-content">
               <span class="count">{{ categories[2].count }} Articles</span>
               <span class="name"> {{ categories[2].name }}</span>
+              <span class="description"> {{ categories[2].description }}</span>
             </div>
           </div>
-          <div class="azure-segments card">
+          <div class="azure-segments card" (click)="selectedtopic(1)">
             <img [src]="categories[1].image" [alt]="categories[1].name" />
             <div class="image-content">
               <span class="count">{{ categories[1].count }} Articles</span>
               <span class="name"> {{ categories[1].name }}</span>
+              <span class="description"> {{ categories[1].description }}</span>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <div class="tab-section" *ngIf="!ArticalFetch && !contentFetch">
+      <div class="maincategory-segment">
+        <div class="offering-segment card" (click)="selectedtopic(0)">
+          <img [src]="categories[0].image" [alt]="categories[0].name" />
+          <div class="image-content">
+            <span class="count">{{ categories[0].count }} Articles</span>
+            <span class="name"> {{ categories[0].name }}</span>
+            <span class="description"> {{ categories[0].description }}</span>
+          </div>
+        </div>
+        <div class="user-segment">
+          <div class="buyer-segments card" (click)="selectedtopic(4)">
+            <img [src]="categories[4].image" [alt]="categories[4].name" />
+            <div class="image-content">
+              <span class="count">{{ categories[4].count }} Articles</span>
+              <span class="name"> {{ categories[4].name }}</span>
+              <span class="description"> {{ categories[4].description }}</span>
+            </div>
+          </div>
+          <div class="seller-segments card" (click)="selectedtopic(3)">
+            <img [src]="categories[3].image" [alt]="categories[3].name" />
+            <div class="image-content">
+              <span class="count">{{ categories[3].count }} Articles</span>
+              <span class="name"> {{ categories[3].name }}</span>
+              <span class="description"> {{ categories[3].description }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="category-segments">
+        <div class="user-segments">
+          <div class="Cybersecurity-segment card" (click)="selectedtopic(5)">
+            <img [src]="categories[5].image" [alt]="categories[5].name" />
+            <div class="image-content">
+              <span class="count">{{ categories[5].count }} Articles</span>
+              <span class="name"> {{ categories[5].name }}</span>
+              <span class="description"> {{ categories[5].description }}</span>
+            </div>
+          </div>
+          <div class="aws-segments card" (click)="selectedtopic(2)">
+            <img [src]="categories[2].image" [alt]="categories[2].name" />
+            <div class="image-content">
+              <span class="count">{{ categories[2].count }} Articles</span>
+              <span class="name"> {{ categories[2].name }}</span>
+              <span class="description"> {{ categories[2].description }}</span>
+            </div>
+          </div>
+          <div class="azure-segments card" (click)="selectedtopic(1)">
+            <img [src]="categories[1].image" [alt]="categories[1].name" />
+            <div class="image-content">
+              <span class="count">{{ categories[1].count }} Articles</span>
+              <span class="name"> {{ categories[1].name }}</span>
+              <span class="description"> {{ categories[1].description }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mobile-section" *ngIf="!ArticalFetch && !contentFetch">
+      <div class="offering-segment card" (click)="selectedtopic(0)">
+        <img [src]="categories[0].image" [alt]="categories[0].name" />
+        <div class="image-content">
+          <span class="count">{{ categories[0].count }} Articles</span>
+          <span class="name"> {{ categories[0].name }}</span>
+          <span class="description"> {{ categories[0].description }}</span>
+        </div>
+      </div>
+      <div class="buyer-segments card" (click)="selectedtopic(4)">
+        <img [src]="categories[4].image" [alt]="categories[4].name" />
+        <div class="image-content">
+          <span class="count">{{ categories[4].count }} Articles</span>
+          <span class="name"> {{ categories[4].name }}</span>
+          <span class="description"> {{ categories[4].description }}</span>
+        </div>
+      </div>
+      <div class="seller-segments card" (click)="selectedtopic(3)">
+        <img [src]="categories[3].image" [alt]="categories[3].name" />
+        <div class="image-content">
+          <span class="count">{{ categories[3].count }} Articles</span>
+          <span class="name"> {{ categories[3].name }}</span>
+          <span class="description"> {{ categories[3].description }}</span>
+        </div>
+      </div>
+      <div class="Cybersecurity-segment card" (click)="selectedtopic(5)">
+        <img [src]="categories[5].image" [alt]="categories[5].name" />
+        <div class="image-content">
+          <span class="count">{{ categories[5].count }} Articles</span>
+          <span class="name"> {{ categories[5].name }}</span>
+          <span class="description"> {{ categories[5].description }}</span>
+        </div>
+      </div>
+      <div class="aws-segments card" (click)="selectedtopic(2)">
+        <img [src]="categories[2].image" [alt]="categories[2].name" />
+        <div class="image-content">
+          <span class="count">{{ categories[2].count }} Articles</span>
+          <span class="name"> {{ categories[2].name }}</span>
+          <span class="description"> {{ categories[2].description }}</span>
+        </div>
+      </div>
+      <div class="azure-segments card" (click)="selectedtopic(1)">
+        <img [src]="categories[1].image" [alt]="categories[1].name" />
+        <div class="image-content">
+          <span class="count">{{ categories[1].count }} Articles</span>
+          <span class="name"> {{ categories[1].name }}</span>
+          <span class="description"> {{ categories[1].description }}</span>
+        </div>
+      </div>
+    </div>
     <div class="section-bodysubsection" *ngIf="!ArticalFetch && !contentFetch">
-      Also Check Out
+      <div class="action-section">
+        Also Check Out
+        <a class="action-button" href="https://marketplace.ofofo.io" target="_blank">
+          <img src="assets/images/bluesoftflower.svg" />
+          <span class="link">Ofofo Marketplace</span>
+        </a>
+        <a class="action-button" href="https://ofofo.blogs" target="_blank">
+          <img src="assets/images/pinksoftflower.svg" />
+          <span class="link">Ofofo Blogs & Podcasts</span>
+        </a>
+        <a class="action-button" href="https://ofofo.news" target="_blank">
+          <img src="assets/images/orangesoftflower.svg" />
+          <span class="link">Ofofo News</span>
+        </a>
+      </div>
       <div class="other-web">
-        <img src="assets/images/categoryicon.svg" class="me-2" (click)="onKeyEnter()" />
-        Ofofo Marketplace
+        <img src="assets/images/document.svg" class="me-2" />
+        Suggested Articles
+      </div>
+      <div class="suggested-articles">
+        <div class="artical-card card" *ngFor="let options of selectedarticals; let i = index"
+          (click)="selectedartical(options)">
+          <img class="artical-img" [defaultImage]="placeholder" [lazyLoad]="placeholder" />
+          <span class="title">{{ options.title }}</span>
+          <span class="description">{{ options.description }}</span>
+        </div>
       </div>
     </div>
     <div class="section-heading2" *ngIf="ArticalFetch && !contentFetch">
-      <img src="assets/images/home.svg" />
+      <img (click)="navigationMenu('main')" src="assets/images/home.svg" />
       /
-      <span>All categories</span>
+      <span (click)="navigationMenu('main')">All categories</span>
       /
-      <span class="active-heading">{{ articals.title }}</span>
+      <span class="active-heading" (click)="navigationMenu('refresh')">{{ articals.title }}</span>
     </div>
     <div class="section-heading2" *ngIf="!ArticalFetch && contentFetch">
-      <img src="assets/images/home.svg" />
+      <img (click)="navigationMenu('main')" src="assets/images/home.svg" />
       /
-      <span>All categories</span>
+      <span (click)="navigationMenu('main')">All categories</span>
       /
-      <span>Introduction To Offerings</span>
+      <span (click)="navigationMenu('topic')">Introduction To Offerings</span>
       /
-      <span class="active-heading">{{ articalcontent.title }}</span>
+      <span class="active-heading" (click)="navigationMenu('refresh')">{{ articalcontent.title }}</span>
     </div>
-    <div class="divider"></div>
+    <div class="divider" *ngIf="ArticalFetch || contentFetch"></div>
     <div class="section-bodyheading" *ngIf="ArticalFetch && !contentFetch">
       <span>{{ articals.title }}</span>
       <span class="articalcount">{{ articals.articles.length }} Articles</span>
@@ -105,7 +258,8 @@
       <span class="description">{{ articalcontent.description }}</span>
     </div>
     <div class="section-body2" *ngIf="ArticalFetch && !contentFetch">
-      <div class="artical-card card" *ngFor="let options of articals.articles; let i = index">
+      <div class="artical-card card" *ngFor="let options of articals.articles; let i = index"
+        (click)="selectedartical(options)">
         <img class="artical-img" [defaultImage]="placeholder" [lazyLoad]="placeholder" />
         <span class="title">{{ options.title }}</span>
         <span class="description">{{ options.description }}</span>
@@ -121,26 +275,68 @@
           <ng-container *ngFor="let options of articalcontent.content; let i = index">
             <ng-container *ngIf="options.rich_text && options.rich_text.length > 0">
               <ng-container *ngIf="options.type ==='heading_2'">
-                <div class="content-heading" *ngFor="let content of options.rich_text; let i = index"
-                  [ngClass]="{ boldText: content.annotations.bold }">
+                <div class="content-heading" *ngFor="let content of options.rich_text; let j = index"
+                  (click)="scrollToSection(i)" [ngClass]="{ boldText: content.annotations.bold }">
                   {{ content.text.content }}
                 </div>
               </ng-container>
             </ng-container>
           </ng-container>
         </div>
+        <div class="offerings-section">
+          <div class="offering-header-section">
+            <img src="assets/images/deals.svg" />
+            <span>Deals You Might Like</span>
+          </div>
+          <div class="offerings-body">
+            <div class="offerings-card card" *ngFor="let offering of offeringsData; let i = index"
+              (click)="openOffering(offering)">
+              <div class="top-section">
+                <img [defaultImage]="imgplaceholder" [lazyLoad]="offering.image" alt="{{ offering.offeringName }}"
+                  title="{{ offering?.offeringName }}" class="card-img-top" />
+                <h1 class="card-title">{{ offering.offeringName }}</h1>
+              </div>
+              <div class="price-section">
+                <div class="discount-section" *ngIf="offering.discountPercentage">
+                  <div class="oldprice">USD ${{ offering.price }}</div>
+                  <div class="price-tag">Save {{ offering.discountPercentage }}%</div>
+                </div>
+                <div class="price-tag" *ngIf="offering.price === 0">Free</div>
+                <div class="price" *ngIf="!offering.discountPercentage">USD ${{ offering.price }}</div>
+                <div class="price" *ngIf="offering.discountPercentage">USD ${{ offering.price - (offering.price *
+                  offering.discountPercentage)/100 }}</div>
+              </div>
+              <div class="pricing-model-section">
+                <div class="pricing-model">{{ offering.pricingModel }}</div>
+                <div class="milestone-division"
+                  *ngIf="offering.firstMilestonePrice || offering.firstMilestonePrice === 0"></div>
+                <div class="milestone" *ngIf="offering.firstMilestonePrice || offering.firstMilestonePrice === 0">
+                  Starting from<div class="milestone-tag ms-2">${{
+                    offering.firstMilestonePrice }}</div>
+                </div>
+              </div>
+              <button class="buybutton" (click)="openOffering(offering)">Buy Now</button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="content-body">
         <ng-container *ngFor="let options of articalcontent.content; let i = index">
           <ng-container *ngIf="options.rich_text && options.rich_text.length > 0">
-            <ng-container *ngIf="options.type ==='paragraph' || options.type ==='heading_2'">
-              <div *ngFor="let content of options.rich_text; let i = index"
+            <ng-container *ngIf="options.type ==='heading_2'">
+              <div *ngFor="let content of options.rich_text; let j = index" [attr.id]="i"
+                [ngClass]="{ boldText: content.annotations.bold }">
+                {{ content.text.content }}
+              </div>
+            </ng-container>
+            <ng-container *ngIf="options.type ==='paragraph'">
+              <div *ngFor="let content of options.rich_text; let j = index"
                 [ngClass]="{ boldText: content.annotations.bold }">
                 {{ content.text.content }}
               </div>
             </ng-container>
             <ul *ngIf="options.type ==='bulleted_list_item'">
-              <li class="content" *ngFor="let content of options.rich_text; let i = index">
+              <li class="content" *ngFor="let content of options.rich_text; let j = index">
                 {{ content.text.content }}
               </li>
             </ul>
@@ -153,6 +349,14 @@
             <img [src]="options.external.url" alt="{{ options.external.url }}" />
           </div>
         </ng-container>
+        <div class="review-section">
+          <div class="review-heading">How Helpful Was The Article?</div>
+          <div class="review-items">
+            <img src="assets/images/emoji1.svg" />
+            <img src="assets/images/emoji2.svg" />
+            <img src="assets/images/emoji3.svg" />
+          </div>
+        </div>
       </div>
     </div>
   </div>

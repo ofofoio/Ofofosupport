@@ -5,7 +5,8 @@ import { SupportComponent } from './support/support.component';
 
 const routes: Routes = [
   { path: '', component: SupportComponent },
-  { path: 'news/:newsId', component: NewsblogComponent },
+  { path: ':topicName/:topicId', component: SupportComponent },
+  { path: ':topicName/:topicId/:articleName/:articleId', component: SupportComponent },
   { path: '**', redirectTo: '' }, // Redirect to the default route for any unknown paths
 ];
 
