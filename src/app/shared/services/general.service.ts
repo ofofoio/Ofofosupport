@@ -52,6 +52,14 @@ export class GeneralService {
     );
   }
 
+  postRating(body: any) {
+    return this.http.post(
+      this.constantService.getUrl(
+        `/api/v1/aether-free-api/suppportpage/rating`
+      ),body
+    );
+  }
+
   getNews(body: any) {
     return this.http.post('https://hfvyjgjkussryrfqmpxaokmeia0thgkh.lambda-url.us-east-1.on.aws',body);
   }

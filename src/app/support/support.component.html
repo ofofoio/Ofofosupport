@@ -323,9 +323,8 @@
       <div class="content-body">
         <ng-container *ngFor="let options of articalcontent.content; let i = index">
           <ng-container *ngIf="options.rich_text && options.rich_text.length > 0">
-            <ng-container *ngIf="options.type ==='heading_2'">
-              <div *ngFor="let content of options.rich_text; let j = index" [attr.id]="i"
-                [ngClass]="{ boldText: content.annotations.bold }">
+            <ng-container *ngIf="options.type ==='heading_2' || options.type ==='heading_1'">
+              <div *ngFor="let content of options.rich_text; let j = index" [attr.id]="i" class="boldText">
                 {{ content.text.content }}
               </div>
             </ng-container>
@@ -351,11 +350,12 @@
         </ng-container>
         <div class="review-section">
           <div class="review-heading">How Helpful Was The Article?</div>
-          <div class="review-items">
-            <img src="assets/images/emoji1.svg" />
-            <img src="assets/images/emoji2.svg" />
-            <img src="assets/images/emoji3.svg" />
+          <div class="review-items" *ngIf="!userRated">
+            <img (click)="postRating(1)" src="assets/images/emoji1.svg" />
+            <img (click)="postRating(2)" src="assets/images/emoji2.svg" />
+            <img (click)="postRating(3)" src="assets/images/emoji3.svg" />
           </div>
+          <div class="review-description" *ngIf="userRated">Feedback Received Successfully !</div>
         </div>
       </div>
     </div>

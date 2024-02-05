@@ -142,6 +142,9 @@ export class SupportComponent {
   dataFetch: boolean = false;
   ArticalFetch: boolean = false;
   contentFetch: boolean = false;
+  
+  userRated: boolean = false;
+  rating: any = null;
 
   searchQuery: string = "";
 
@@ -190,6 +193,20 @@ export class SupportComponent {
     if (sectionElement) {
       sectionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+  }
+
+  postRating(rating: number) {
+    this.subscriptions.push(
+      this.generalService.postRating({ "rating": rating }).subscribe({
+        next: async (res: any) => {
+          if(res.response === "Rating uploaded successfully"){
+            this.userRated = true;
+            this.rating = rating;
+          }
+        },
+        error: (error: any) => { },
+      })
+    );
   }
 
   navigationMenu(page: any) {
@@ -290,6 +307,7 @@ export class SupportComponent {
           this.articalcontent = res.result;
           this.getOfferings();
           this.dataFetch = true;
+          this.contentFetch = true;
         },
         error: (error: any) => { },
       })
