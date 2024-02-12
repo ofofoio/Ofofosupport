@@ -12,7 +12,7 @@
         <img src="assets/images/inputsearchicon.svg" class="me-2" />
         Search for articles,FAQs...
       </div>
-      <div class="suggestions-section" *ngIf="searchQuery !== ''">
+      <div class="suggestions-section" *ngIf="searchQuery !== '' && !searchFetch">
         <ng-container *ngFor="let topics of categoriesData">
           <div class="topics-section" *ngIf="topics.searchedarticals.length > 0">
             <div class="topic-name">{{ topics.name }}</div>
@@ -37,11 +37,12 @@
     </div>
   </div>
   <div class="category-section">
-    <div class="section-heading" (click)="navigationMenu('refresh')" *ngIf="!ArticalFetch && !contentFetch">
+    <div class="section-heading" (click)="navigationMenu('refresh')"
+      *ngIf="!ArticalFetch && !contentFetch && !searchFetch">
       <img src="assets/images/categoryicon.svg" class="me-2" (click)="onKeyEnter()" />
       All Categories
     </div>
-    <div class="section-body" *ngIf="!ArticalFetch && !contentFetch">
+    <div class="section-body" *ngIf="!ArticalFetch && !contentFetch && !searchFetch">
       <div class="offering-segment card" (click)="selectedtopic(0)">
         <img [src]="categories[0].image" [alt]="categories[0].name" />
         <div class="image-content">
@@ -95,7 +96,7 @@
         </div>
       </div>
     </div>
-    <div class="tab-section" *ngIf="!ArticalFetch && !contentFetch">
+    <div class="tab-section" *ngIf="!ArticalFetch && !contentFetch && !searchFetch">
       <div class="maincategory-segment">
         <div class="offering-segment card" (click)="selectedtopic(0)">
           <img [src]="categories[0].image" [alt]="categories[0].name" />
@@ -153,7 +154,7 @@
         </div>
       </div>
     </div>
-    <div class="mobile-section" *ngIf="!ArticalFetch && !contentFetch">
+    <div class="mobile-section" *ngIf="!ArticalFetch && !contentFetch && !searchFetch">
       <div class="offering-segment card" (click)="selectedtopic(0)">
         <img [src]="categories[0].image" [alt]="categories[0].name" />
         <div class="image-content">
@@ -203,7 +204,7 @@
         </div>
       </div>
     </div>
-    <div class="section-bodysubsection" *ngIf="!ArticalFetch && !contentFetch">
+    <div class="section-bodysubsection" *ngIf="!ArticalFetch && !contentFetch && !searchFetch">
       <div class="action-section">
         Also Check Out
         <a class="action-button" href="https://marketplace.ofofo.io" target="_blank">
@@ -232,14 +233,14 @@
         </div>
       </div>
     </div>
-    <div class="section-heading2" *ngIf="ArticalFetch && !contentFetch">
+    <div class="section-heading2" *ngIf="ArticalFetch && !contentFetch && !searchFetch">
       <img (click)="navigationMenu('main')" src="assets/images/home.svg" />
       /
       <span (click)="navigationMenu('main')">All categories</span>
       /
       <span class="active-heading" (click)="navigationMenu('refresh')">{{ articals.title }}</span>
     </div>
-    <div class="section-heading2" *ngIf="!ArticalFetch && contentFetch">
+    <div class="section-heading2" *ngIf="!ArticalFetch && contentFetch && !searchFetch">
       <img (click)="navigationMenu('main')" src="assets/images/home.svg" />
       /
       <span (click)="navigationMenu('main')">All categories</span>
@@ -248,16 +249,16 @@
       /
       <span class="active-heading" (click)="navigationMenu('refresh')">{{ articalcontent.title }}</span>
     </div>
-    <div class="divider" *ngIf="ArticalFetch || contentFetch"></div>
-    <div class="section-bodyheading" *ngIf="ArticalFetch && !contentFetch">
+    <div class="divider" *ngIf="(ArticalFetch || contentFetch) && !searchFetch"></div>
+    <div class="section-bodyheading" *ngIf="ArticalFetch && !contentFetch  && !searchFetch">
       <span>{{ articals.title }}</span>
       <span class="articalcount">{{ articals.articles.length }} Articles</span>
     </div>
-    <div class="section-bodyheading" *ngIf="!ArticalFetch && contentFetch">
+    <div class="section-bodyheading" *ngIf="!ArticalFetch && contentFetch && !searchFetch">
       <span>{{ articalcontent.title }}</span>
       <span class="description">{{ articalcontent.description }}</span>
     </div>
-    <div class="section-body2" *ngIf="ArticalFetch && !contentFetch">
+    <div class="section-body2" *ngIf="ArticalFetch && !contentFetch && !searchFetch">
       <div class="artical-card card" *ngFor="let options of articals.articles; let i = index"
         (click)="selectedartical(options)">
         <img class="artical-img" [defaultImage]="placeholder" [lazyLoad]="placeholder" />
@@ -265,7 +266,7 @@
         <span class="description">{{ options.description }}</span>
       </div>
     </div>
-    <div class="section-body3" *ngIf="!ArticalFetch && contentFetch">
+    <div class="section-body3" *ngIf="!ArticalFetch && contentFetch && !searchFetch">
       <div class="content-menu">
         <div class="table-menu">
           <span class="heading">
@@ -357,6 +358,26 @@
           </div>
           <div class="review-description" *ngIf="userRated">Feedback Received Successfully !</div>
         </div>
+      </div>
+    </div>
+    <div class="section-search" *ngIf="!ArticalFetch && !contentFetch && searchFetch">
+      <div class="suggestions-section">
+        <ng-container *ngFor="let options of categoriesData">
+          <div class="topics-section" *ngIf="options.searchResult.length > 0">
+            <div class="heading">
+              <div class="mainheading">{{ options.name }}</div>
+              <div class="count"><span>{{ options.searchResult.length }}</span><span>Articles</span></div>
+            </div>
+            <div class="suggested-articles">
+              <div class="artical-card card" *ngFor="let options of options.searchResult; let i = index"
+                (click)="selectedartical(options)">
+                <img class="artical-img" [defaultImage]="placeholder" [lazyLoad]="placeholder" />
+                <span class="title">{{ options.title }}</span>
+                <span class="description">{{ options.description }}</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>

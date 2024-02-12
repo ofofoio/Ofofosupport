@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GeneralService } from '../shared/services/general.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import * as CryptoJS from "crypto-js";
 
@@ -57,37 +57,43 @@ export class SupportComponent {
       id: "e93eea5d-d6ca-4873-98f0-553410eaa13d",
       name: "Introductions to the offerings",
       articals: [],
-      searchedarticals: []
+      searchedarticals: [],
+      searchResult: []
     },
     {
       id: "f93dd349-635a-4bbe-a697-c70bf7c649dc",
       name: "Azure Best Practices",
       articals: [],
-      searchedarticals: []
+      searchedarticals: [],
+      searchResult: []
     },
     {
       id: "edda09e2-d212-4656-8125-ce8fb71cb647",
       name: "AWS Best Practices",
       articals: [],
-      searchedarticals: []
+      searchedarticals: [],
+      searchResult: []
     },
     {
       id: "542af340-39b3-42e1-af4c-7a1d75f22226",
       name: "Ofofo Seller Guide",
       articals: [],
-      searchedarticals: []
+      searchedarticals: [],
+      searchResult: []
     },
     {
       id: "08ed776d-7cc4-4bae-8df9-1f7c3f5a890b",
       name: "Ofofo Buyer Guide",
       articals: [],
-      searchedarticals: []
+      searchedarticals: [],
+      searchResult: []
     },
     {
       id: "f74ddd6d-e365-4e10-9438-0941d37f0723",
       name: "Cybersecurity Wiki",
       articals: [],
-      searchedarticals: []
+      searchedarticals: [],
+      searchResult: []
     },
   ];
   public selectedarticals: any = [
@@ -142,7 +148,10 @@ export class SupportComponent {
   dataFetch: boolean = false;
   ArticalFetch: boolean = false;
   contentFetch: boolean = false;
-  
+  searchFetch: boolean = false;
+  initialSearchFetch: boolean = false;
+  categoriesDataFetch: boolean = false;
+
   userRated: boolean = false;
   rating: any = null;
 
@@ -171,16 +180,36 @@ export class SupportComponent {
           this.topicId = params.topicId;
           this.getArticals();
         } else {
-          this.getSupport();
+          this.activatedRoute.queryParams.subscribe({
+            next: async (queryParams: any) => {
+              if (queryParams.search) {
+                this.searchQuery = queryParams.search
+                this.searchFetch = true;
+                this.initialSearchFetch = true;
+                if (this.categoriesDataFetch) this.onKeyUp("", this.searchQuery);
+                // this.getSupport();
+              } else {
+                this.getSupport();
+              }
+            },
+            error: (error: any) => { },
+          });
         }
       },
       error: (error: any) => { },
     });
-    this.categoriesData.forEach((topic: any) => {
+    this.categoriesData.forEach((topic: any, i: any) => {
       this.subscriptions.push(
         this.generalService.getArticles(topic.id).subscribe({
           next: async (res: any) => {
             topic.articals = res.topic.articles;
+            if (this.searchFetch && i === this.categoriesData.length - 1) {
+              setTimeout(() => {
+                this.onKeyUp("", this.searchQuery);
+              }, 2000);
+            }
+            this.categoriesDataFetch = true;
+            this.dataFetch = true;
           },
           error: (error: any) => { },
         })
@@ -199,7 +228,7 @@ export class SupportComponent {
     this.subscriptions.push(
       this.generalService.postRating({ "rating": rating }).subscribe({
         next: async (res: any) => {
-          if(res.response === "Rating uploaded successfully"){
+          if (res.response === "Rating uploaded successfully") {
             this.userRated = true;
             this.rating = rating;
           }
@@ -224,22 +253,34 @@ export class SupportComponent {
     }
   }
 
-  onKeyUp(event: any) {
-    this.searchQuery = event.value;
+  onKeyUp(event: any, value?: any) {
+    if (value)
+      this.searchQuery = value;
+    else
+      this.searchQuery = event.value;
+    console.log(this.searchQuery, this.categoriesData);
     if (this.searchQuery !== "") {
       this.categoriesData.forEach((topics: any) => {
         topics.searchedarticals = [];
+        if (this.initialSearchFetch) topics.searchResult = [];
         topics.articals.forEach((artical: any) => {
           if (artical.title.toLowerCase().includes(this.searchQuery) || artical.description.toLowerCase().includes(this.searchQuery)) {
             topics.searchedarticals.push(artical)
+            if (this.initialSearchFetch) topics.searchResult.push(artical)
           }
         });
       });
     }
+    console.log(this.categoriesData);
   }
 
   onKeyEnter() {
     console.log("hit");
+    // this.router.navigate([`/?search=${this.searchQuery}`]);
+    const navigationExtras: NavigationExtras = {
+      replaceUrl: true // This ensures that the browser's history is replaced
+    };
+    this.router.navigateByUrl(`/?search=${this.searchQuery}`, navigationExtras);
   }
 
   openOffering(offering: any) {
@@ -294,6 +335,7 @@ export class SupportComponent {
         next: async (res: any) => {
           this.articals = res.topic;
           this.dataFetch = true;
+          this.ArticalFetch = true;
         },
         error: (error: any) => { },
       })
