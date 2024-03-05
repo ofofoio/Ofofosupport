@@ -4,6 +4,7 @@ import { GeneralService } from '../shared/services/general.service';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import * as CryptoJS from "crypto-js";
+import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-support',
@@ -164,7 +165,9 @@ export class SupportComponent {
   constructor(
     private generalService: GeneralService,
     private activatedRoute: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private meta: Meta
+    ) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe({
@@ -321,7 +324,7 @@ export class SupportComponent {
                 category.count = element.articles
               }
             });
-          });;
+          });
           this.dataFetch = true;
         },
         error: (error: any) => { },
@@ -334,6 +337,9 @@ export class SupportComponent {
       this.generalService.getArticles(this.topicId).subscribe({
         next: async (res: any) => {
           this.articals = res.topic;
+          this.meta.updateTag({ property: 'og:title', content: this.articals.title });
+          this.meta.updateTag({ property: 'og:description', content: this.articals.description });
+          this.meta.addTag({ property: 'author', content: "ofofo" });
           this.dataFetch = true;
           this.ArticalFetch = true;
         },
@@ -347,6 +353,9 @@ export class SupportComponent {
       this.generalService.getcontents(this.articleId).subscribe({
         next: async (res: any) => {
           this.articalcontent = res.result;
+          this.meta.updateTag({ property: 'og:title', content: this.articalcontent.title });
+          this.meta.updateTag({ property: 'og:description', content: this.articalcontent.description });
+          this.meta.addTag({ property: 'author', content: this.articalcontent.parentItem });
           this.getOfferings();
           this.dataFetch = true;
           this.contentFetch = true;
