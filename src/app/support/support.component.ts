@@ -167,7 +167,7 @@ export class SupportComponent {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private meta: Meta
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe({
@@ -357,6 +357,38 @@ export class SupportComponent {
           this.meta.updateTag({ property: 'og:description', content: this.articalcontent.description });
           this.meta.addTag({ property: 'author', content: this.articalcontent.parentItem });
           this.getOfferings();
+          let listindex: any = null;
+          // this.articalcontent.content.forEach((element: any, i: number) => {
+          //   if (element.type === 'numbered_list_item') {
+          //     console.log(i, element, listindex)
+          //     if (listindex) {
+          //       this.articalcontent.content[listindex].rich_text.push(element.rich_text[0]);
+          //       this.articalcontent.content.splice(i, 1);
+          //       i--;
+          //     } else {
+          //       listindex = i;
+          //     }
+          //   } else {
+          //     listindex = null;
+          //   }
+          // });
+          for (let i = 0; i < this.articalcontent.content.length; i++) {
+            const element = this.articalcontent.content[i];
+            if (element.type === 'numbered_list_item' || element.type === 'bulleted_list_item') {
+                console.log(i, element, listindex);
+                if (listindex) {
+                    this.articalcontent.content[listindex].rich_text.push(element.rich_text[0]);
+                    this.articalcontent.content.splice(i, 1);
+                    i--;
+                } else {
+                    listindex = i;
+                }
+            } else {
+                listindex = null;
+            }
+        }
+        
+          console.log(this.articalcontent)
           this.dataFetch = true;
           this.contentFetch = true;
         },

@@ -335,14 +335,30 @@
                 {{ content.text.content }}
               </div>
             </ng-container>
-            <ul *ngIf="options.type ==='bulleted_list_item'">
+            <!-- <ul *ngIf="options.type ==='bulleted_list_item'">
               <li class="content" *ngFor="let content of options.rich_text; let j = index">
                 {{ content.text.content }}
               </li>
-            </ul>
+            </ul> -->
+            <div class="external-links" *ngIf="options.type ==='bulleted_list_item'">
+              <ul>
+                <ng-container *ngFor="let listitems of options.rich_text; let j = index">
+                  <li *ngIf="!listitems.href"><span class="sideheading">{{ listitems.text.content
+                      }}</span></li>
+                  <li *ngIf="listitems.href"><a href="listitems.text.content" class="sideheading">{{
+                      listitems.text.content }}</a></li>
+                </ng-container>
+              </ul>
+            </div>
             <div class="external-links" *ngIf="options.type ==='numbered_list_item'">
-              <span class="sideheading">{{ options.rich_text[0].text.content }}</span>
-              <a href="options.rich_text[1].text.content">{{ options.rich_text[1].text.content }}</a>
+              <ol>
+                <ng-container *ngFor="let listitems of options.rich_text; let j = index">
+                  <li *ngIf="!listitems.href"><span class="sideheading">{{ listitems.text.content
+                      }}</span></li>
+                  <li *ngIf="listitems.href"><a href="listitems.text.content" class="sideheading">{{
+                      listitems.text.content }}</a></li>
+                </ng-container>
+              </ol>
             </div>
           </ng-container>
           <div class="img-links" *ngIf="options.type ==='external' && options.external">
